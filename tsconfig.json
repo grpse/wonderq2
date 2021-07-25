@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2020",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "typeRoots": [
+      "node_modules/@types",
+      "../types"
+    ],
+    "types": [
+      "jest",
+      "node"
+    ],
+    "paths": {
+      "@models/*": ["src/models/*"],
+      "@modules/*": ["src/modules/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "./dist/**/*"
+  ]
+}

@@ -1,0 +1,160 @@
+swagger: "2.0"
+info:
+  description: "This api client message queue FIFO with a single queue"
+  version: "1.0.0"
+  title: "WonderQ 2"
+  contact:
+    email: "gilbertoribeiropazdarosa@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+host: "localhost:3000"
+basePath: "/"
+tags:
+- name: "message"
+  description: "Enqueue, dequeue, size, get some, get all"
+
+schemes:
+- "http"
+paths:
+  /:
+    post:
+      tags:
+      - "message"
+      summary: "Enqueue a new message as json object"
+      description: ""
+      operationId: "enqueueMessage"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Json content of the message"
+        required: true
+        schema:
+          $ref: "#/definitions/Message"
+      responses:
+        "200":
+          description: "Enqueued message id"
+          schema:
+            $ref: "#/definitions/MessageID"
+  /size:
+    get:
+      tags:
+      - "message"
+      summary: "Get the size of the queue"
+      description: ""
+      operationId: "size"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Queue size"
+          schema:
+            $ref: "#/definitions/SizeResponse"
+  /next:
+    get:
+      tags:
+      - "message"
+      summary: "Dequeue the next message"
+      description: ""
+      operationId: "dequeueMessage"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "204":
+          description: "Queue has no available messages"
+        "200":
+          description: "Message data object"
+          schema:
+            $ref: "#/definitions/MessageDataObject"
+  /some/{amount}:
+    get:
+      tags:
+      - "message"
+      summary: "Dequeue some amount of available messages"
+      description: ""
+      operationId: "dequeueAllMessages"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: path
+          name: amount
+          type: integer
+          required: true
+      responses:
+        "204":
+          description: "Queue has no available messages"
+        "200":
+          description: "Message data object"
+          schema:
+            type: array
+            $ref: "#/definitions/ArrayOfMessageDataObject"
+  /all:
+    get:
+      tags:
+      - "message"
+      summary: "Dequeue all available messages"
+      description: ""
+      operationId: "dequeueAllMessages"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "204":
+          description: "Queue has no available messages"
+        "200":
+          description: "Message data object"
+          schema:
+            type: array
+            $ref: "#/definitions/ArrayOfMessageDataObject"
+  /{messageId}:
+    delete:
+      tags:
+      - "message"
+      summary: "Dequeue all available messages"
+      description: ""
+      operationId: "dequeueAllMessages"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: messageId
+          type: integer
+          required: true
+      responses:
+        "400":
+          description: "Message went back to the available pool due to timeout"
+        "200":
+          description: "Message successfully deleted"
+
+definitions:
+  MessageID:
+    type: "integer"
+  Message:
+    type: "object"
+  MessageDataObject:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      data:
+        type: "object"
+  ArrayOfMessageDataObject:
+    type: "array"
+    items:
+      $ref: "#/definitions/MessageDataObject"
+  SizeResponse:
+    type: "object"
+    properties:
+      size:
+        type: "integer"
